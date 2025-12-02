@@ -77,7 +77,8 @@ export class TodoItemComponent {
    * @param date - La date à formater
    * @returns La date formatée
    */
-  protected formatDate(date: Date): string {
+  protected formatDate(date: Date | undefined): string {
+    if (!date) return '';
     return new Date(date).toLocaleDateString('fr-FR', {
       day: '2-digit',
       month: 'short'
