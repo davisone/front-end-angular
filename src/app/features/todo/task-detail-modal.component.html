@@ -1,0 +1,33 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Détails de la tâche</h2>
+      <button class="close-button" (click)="onClose()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="detail-row">
+        <span class="detail-label">ID:</span>
+        <span class="detail-value">{{ task().id }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Titre:</span>
+        <span class="detail-value">{{ task().title }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Statut:</span>
+        <span class="detail-value">
+          <span class="status-badge" [ngClass]="getStatusClass(task().status)">
+            {{ getStatusLabel(task().status) }}
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="onClose()">Fermer</button>
+    </div>
+  </div>
+</div>

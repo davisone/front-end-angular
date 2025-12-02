@@ -1,0 +1,25 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <h2>Gestion de Tâches</h2>
+    </div>
+
+    <ul class="navbar-menu">
+      <li class="navbar-item">
+        <a routerLink="/dashboard" routerLinkActive="active" class="navbar-link">
+          Dashboard
+        </a>
+      </li>
+      <li class="navbar-item">
+        <a routerLink="/tasks" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" class="navbar-link">
+          Liste des tâches
+        </a>
+      </li>
+      <li class="navbar-item">
+        <a routerLink="/tasks/create" routerLinkActive="active" class="navbar-link">
+          Créer une tâche
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
