@@ -3,6 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@auth0/auth0-angular';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { Footer } from './shared/components/footer/footer';
 
 /**
  * Composant principal de l'application
@@ -10,7 +11,7 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
  */
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, NavbarComponent],
+  imports: [CommonModule, RouterOutlet, NavbarComponent, Footer],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

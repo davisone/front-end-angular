@@ -1,6 +1,12 @@
-<!-- Affiche la navbar seulement si l'utilisateur est connecté -->
-@if (isAuthenticated$ | async) {
-  <app-navbar></app-navbar>
-}
+<div class="app-container">
+  <!-- Affiche la navbar seulement si l'utilisateur est connecté -->
+  @if (isAuthenticated$ | async) {
+    <app-navbar></app-navbar>
+  }
 
-<router-outlet></router-outlet>
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-footer></app-footer>
+</div>
