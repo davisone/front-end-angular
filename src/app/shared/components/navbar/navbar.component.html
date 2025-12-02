@@ -10,6 +10,8 @@
           Dashboard
         </a>
       </li>
+
+      <!-- Menu toujours visible (protection par authGuard dans les routes) -->
       <li class="navbar-item">
         <a routerLink="/tasks" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" class="navbar-link">
           Liste des tâches
@@ -19,6 +21,22 @@
         <a routerLink="/tasks/create" routerLinkActive="active" class="navbar-link">
           Créer une tâche
         </a>
+      </li>
+
+      <!-- Affiche l'utilisateur et déconnexion si connecté, sinon bouton connexion -->
+      <li class="navbar-item navbar-auth">
+        @if (auth.isAuthenticated$ | async) {
+          @if (auth.user$ | async; as user) {
+            <span class="user-name">{{ user.name || user.email }}</span>
+          }
+          <button class="btn-logout" (click)="logout()">
+            Déconnexion
+          </button>
+        } @else {
+          <button class="btn-login" (click)="login()">
+            Connexion
+          </button>
+        }
       </li>
     </ul>
   </div>

@@ -24,6 +24,21 @@
           </span>
         </span>
       </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Changer le statut:</span>
+        <span class="detail-value">
+          <select
+            class="status-select"
+            [(ngModel)]="selectedStatus"
+            (ngModelChange)="onStatusChange()"
+          >
+            <option value="todo">À faire</option>
+            <option value="in-progress">En cours</option>
+            <option value="done">Terminé</option>
+          </select>
+        </span>
+      </div>
     </div>
 
     <div class="modal-footer">

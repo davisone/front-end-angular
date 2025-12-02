@@ -131,3 +131,23 @@
 .btn-secondary:hover {
   background-color: #5a6268;
 }
+
+.status-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: white;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.status-select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.status-select:hover {
+  border-color: #999;
+}

@@ -2,8 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { Task } from '../models/task.model';
 
 /**
- * Service qui gère toutes les tâches de l'application
- * C'est comme une "base de données" centralisée pour nos tâches
+ * base de données centralisée pour les tâches
  */
 @Injectable({
   providedIn: 'root'  // Ce service est disponible dans toute l'application
