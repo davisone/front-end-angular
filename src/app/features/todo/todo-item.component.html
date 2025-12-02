@@ -1,10 +1,30 @@
 <div class="task-item">
-  <div class="task-content">
-    <div class="task-title">{{ task().title }}</div>
-    <div class="task-status" [ngClass]="getStatusClass(task().status)">
-      {{ getStatusLabel(task().status) }}
+  <div class="task-main">
+    <div class="task-header">
+      <div class="task-title">{{ task().title }}</div>
+      <div class="task-badges">
+        <span class="task-status" [ngClass]="getStatusClass(task().status)">
+          {{ getStatusLabel(task().status) }}
+        </span>
+        <span class="task-priority" [ngClass]="getPriorityClass(task().priority)">
+          {{ getPriorityLabel(task().priority) }}
+        </span>
+      </div>
+    </div>
+
+    @if (task().description) {
+      <div class="task-description">{{ task().description }}</div>
+    }
+
+    <div class="task-meta">
+      @if (task().dueDate) {
+        <span class="task-date" [class.overdue]="isOverdue(task().dueDate)">
+          📅 {{ formatDate(task().dueDate) }}
+        </span>
+      }
     </div>
   </div>
+
   <button class="task-button" (click)="onButtonClick()">
     Détails
   </button>

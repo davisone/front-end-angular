@@ -49,4 +49,48 @@ export class TodoItemComponent {
   protected onButtonClick(): void {
     this.taskAction.emit(this.task().id);
   }
+
+  /**
+   * Convertit la priorité en texte français lisible
+   * @param priority - La priorité de la tâche
+   * @returns Le texte à afficher
+   */
+  protected getPriorityLabel(priority: 'low' | 'medium' | 'high'): string {
+    if (priority === 'high') return 'Haute';
+    if (priority === 'medium') return 'Moyenne';
+    return 'Basse';
+  }
+
+  /**
+   * Retourne la classe CSS correspondant à la priorité
+   * @param priority - La priorité de la tâche
+   * @returns Le nom de la classe CSS à appliquer
+   */
+  protected getPriorityClass(priority: 'low' | 'medium' | 'high'): string {
+    if (priority === 'high') return 'priority-high';
+    if (priority === 'medium') return 'priority-medium';
+    return 'priority-low';
+  }
+
+  /**
+   * Formate une date pour l'affichage
+   * @param date - La date à formater
+   * @returns La date formatée
+   */
+  protected formatDate(date: Date): string {
+    return new Date(date).toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: 'short'
+    });
+  }
+
+  /**
+   * Vérifie si la date limite est dépassée
+   * @param date - La date limite
+   * @returns true si la date est dépassée
+   */
+  protected isOverdue(date: Date | undefined): boolean {
+    if (!date) return false;
+    return new Date(date) < new Date();
+  }
 }

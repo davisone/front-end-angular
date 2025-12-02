@@ -24,7 +24,10 @@ export class TodoFormComponent {
 
   // Variables liées aux champs du formulaire
   protected title = '';                                    // Le titre de la tâche
+  protected description = '';                              // La description
   protected status: 'todo' | 'in-progress' | 'done' = 'todo';  // Le statut par défaut
+  protected priority: 'low' | 'medium' | 'high' = 'medium';    // La priorité par défaut
+  protected dueDate = '';                                  // Date limite (format ISO string)
 
   /**
    * Appelé quand on soumet le formulaire (clic sur "Créer la tâche")
@@ -33,13 +36,32 @@ export class TodoFormComponent {
     // Vérifier que le titre n'est pas vide
     if (this.title.trim()) {
 
+      // Convertir la date string en objet Date si elle est renseignée
+      const dueDateObj = this.dueDate ? new Date(this.dueDate) : undefined;
+
       // Ajouter la tâche via le service
-      this.todoService.addTask(this.title.trim(), this.status);
-      console.log('Nouvelle tâche créée:', { title: this.title, status: this.status });
+      this.todoService.addTask(
+        this.title.trim(),
+        this.status,
+        this.description.trim() || undefined,
+        this.priority,
+        dueDateObj
+      );
+
+      console.log('Nouvelle tâche créée:', {
+        title: this.title,
+        description: this.description,
+        status: this.status,
+        priority: this.priority,
+        dueDate: dueDateObj
+      });
 
       // Réinitialiser le formulaire pour créer une autre tâche
       this.title = '';
+      this.description = '';
       this.status = 'todo';
+      this.priority = 'medium';
+      this.dueDate = '';
 
       // Rediriger vers la liste des tâches pour voir la nouvelle tâche
       this.router.navigate(['/tasks']);
