@@ -4,6 +4,7 @@ import { Task } from './models/task.model';
 import { TodoItemComponent } from './todo-item.component';
 import { TaskDetailModalComponent } from './task-detail-modal.component';
 import { TodoService } from './services/todo.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 /**
  * Composant qui affiche la liste complète des tâches
@@ -20,8 +21,8 @@ export class TodoListComponent {
   // Injection du service qui gère les tâches
   private todoService = inject(TodoService);
 
-  // Récupère toutes les tâches depuis le service
-  protected readonly tasks = this.todoService.allTasks;
+  // Récupère toutes les tâches depuis le service via l'observable tasks$
+  protected readonly tasks = toSignal(this.todoService.tasks$, { initialValue: [] });
 
   // Variable pour stocker la tâche sélectionnée (pour le modal)
   // null = aucune tâche sélectionnée (modal fermé)
@@ -32,8 +33,8 @@ export class TodoListComponent {
    * @param taskId - L'ID de la tâche cliquée
    */
   protected onTaskAction(taskId: number): void {
-    // Trouve la tâche dans le service
-    const task = this.todoService.getTaskById(taskId);
+    // Trouve la tâche dans la liste locale (depuis le signal)
+    const task = this.tasks().find(t => t.id === taskId);
 
     // Si la tâche existe, on la stocke pour afficher le modal
     if (task) {

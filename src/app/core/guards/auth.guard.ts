@@ -3,11 +3,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { map } from 'rxjs';
 
-/**
- * Guard d'authentification
- * Protège les routes en vérifiant si l'utilisateur est connecté
- * Suit les bonnes pratiques OWASP pour la gestion de session
- */
 export const authGuard = () => {
   const authService = inject(AuthService);
   const router = inject(Router);

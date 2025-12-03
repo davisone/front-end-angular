@@ -1,58 +1,42 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Task } from '../models/task.model';
+import { TaskApiService } from './task-api.service';
+import { TaskStore } from './task.store';
 
-/**
- * base de données centralisée pour les tâches
- */
 @Injectable({
-  providedIn: 'root'  // Ce service est disponible dans toute l'application
+  providedIn: 'root'
 })
 export class TodoService {
 
-  // Liste privée des tâches (personne ne peut la modifier directement de l'extérieur)
-  private tasks = signal<Task[]>([
-    {
-      id: 1,
-      title: 'Préparer la réunion d\'équipe',
-      description: 'Préparer l\'ordre du jour et les documents nécessaires',
-      status: 'todo',
-      priority: 'high',
-      createdAt: new Date('2024-01-15'),
-      dueDate: new Date('2024-12-10')
-    },
-    {
-      id: 2,
-      title: 'suuuuuuuuuuu',
-      description: 'Célébration victoire',
-      status: 'in-progress',
-      priority: 'medium',
-      createdAt: new Date('2024-01-16')
-    },
-    {
-      id: 3,
-      title: 'kyky de bondy',
-      description: 'Le meilleur joueur du monde',
-      status: 'done',
-      priority: 'low',
-      createdAt: new Date('2024-01-14'),
-      dueDate: new Date('2024-01-20')
-    },
-  ]);
+  // Observable public pour que les composants puissent s'abonner
+  public tasks$: Observable<Task[]>;
 
-  // Compteur pour générer des IDs uniques pour chaque nouvelle tâche
-  private nextId = 4;
+  constructor(
+    private taskApiService: TaskApiService,
+    private taskStore: TaskStore
+  ) {
+    // Initialiser l'observable après l'injection
+    this.tasks$ = this.taskStore.tasks$;
 
-  // Version en lecture seule des tâches (les composants peuvent lire mais pas modifier)
-  readonly allTasks = this.tasks.asReadonly();
+    // Charger les tâches initiales au démarrage
+    this.loadTasks();
+  }
 
   /**
-   * Ajoute une nouvelle tâche à la liste
-   * @param title - Le titre de la tâche
-   * @param status - Le statut de la tâche (todo, in-progress ou done)
-   * @param description - Description détaillée (optionnelle)
-   * @param priority - Priorité de la tâche
-   * @param dueDate - Date limite (optionnelle)
+   * Charge toutes les tâches depuis l'API
    */
+  private loadTasks(): void {
+    this.taskApiService.getAll().subscribe({
+      next: (tasks) => {
+        this.taskStore.setTasks(tasks);
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement des tâches:', error);
+      }
+    });
+  }
+
   addTask(
     title: string,
     status: 'todo' | 'in-progress' | 'done',
@@ -60,9 +44,8 @@ export class TodoService {
     priority: 'low' | 'medium' | 'high' = 'medium',
     dueDate?: Date
   ): void {
-    // Créer la nouvelle tâche avec un ID unique
-    const newTask: Task = {
-      id: this.nextId++,
+    // Créer la nouvelle tâche (sans ID, il sera généré par l'API)
+    const newTask: Omit<Task, 'id'> = {
       title: title,
       description: description,
       status: status,
@@ -71,52 +54,54 @@ export class TodoService {
       dueDate: dueDate
     };
 
-    // Ajouter la nouvelle tâche à la liste existante
-    this.tasks.update(tasks => [...tasks, newTask]);
+    // Appeler l'API pour créer la tâche
+    this.taskApiService.create(newTask).subscribe({
+      next: (createdTask) => {
+        // Mettre à jour le store avec la nouvelle tâche
+        this.taskStore.addTask(createdTask);
+      },
+      error: (error) => {
+        console.error('Erreur lors de la création de la tâche:', error);
+      }
+    });
   }
 
-  /**
-   * Trouve une tâche par son ID
-   * @param id - L'identifiant de la tâche à trouver
-   * @returns La tâche trouvée ou undefined si elle n'existe pas
-   */
-  getTaskById(id: number): Task | undefined {
-    return this.tasks().find(task => task.id === id);
-  }
-
-  /**
-   * Supprime une tâche de la liste
-   * @param id - L'identifiant de la tâche à supprimer
-   */
   deleteTask(id: number): void {
-    // Garde toutes les tâches sauf celle avec l'ID donné
-    this.tasks.update(tasks => tasks.filter(task => task.id !== id));
+    // Appeler l'API pour supprimer la tâche
+    this.taskApiService.delete(id).subscribe({
+      next: () => {
+        // Mettre à jour le store en retirant la tâche supprimée
+        this.taskStore.removeTask(id);
+      },
+      error: (error) => {
+        console.error('Erreur lors de la suppression de la tâche:', error);
+      }
+    });
   }
 
-  /**
-   * Change le statut d'une tâche
-   * @param id - L'identifiant de la tâche
-   * @param status - Le nouveau statut
-   */
   updateTaskStatus(id: number, status: 'todo' | 'in-progress' | 'done'): void {
-    // Parcourt toutes les tâches et change le statut de celle qui correspond
-    this.tasks.update(tasks =>
-      tasks.map(task =>
-        task.id === id ? { ...task, status: status } : task
-      )
-    );
+    // Appeler l'API pour mettre à jour le statut
+    this.taskApiService.update(id, { status }).subscribe({
+      next: (updatedTask) => {
+        // Mettre à jour le store avec la tâche mise à jour
+        this.taskStore.updateTask(updatedTask);
+      },
+      error: (error) => {
+        console.error('Erreur lors de la mise à jour du statut:', error);
+      }
+    });
   }
 
-  /**
-   * Met à jour une tâche complètement
-   * @param id - L'identifiant de la tâche
-   * @param updates - Les champs à mettre à jour
-   */
   updateTask(id: number, updates: Partial<Omit<Task, 'id' | 'createdAt'>>): void {
-    this.tasks.update(tasks =>
-      tasks.map(task =>
-        task.id === id ? { ...task, ...updates } : task
-      )
-    );
+    // Appeler l'API pour mettre à jour la tâche
+    this.taskApiService.update(id, updates).subscribe({
+      next: (updatedTask) => {
+        // Mettre à jour le store avec la tâche mise à jour
+        this.taskStore.updateTask(updatedTask);
+      },
+      error: (error) => {
+        console.error('Erreur lors de la mise à jour de la tâche:', error);
+      }
+    });
   }
 }

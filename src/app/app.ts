@@ -3,7 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@auth0/auth0-angular';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
-import { Footer } from './shared/components/footer/footer';
+import { FooterComponent } from './shared/components/footer/footer.component';
 
 /**
  * Composant principal de l'application
@@ -11,11 +11,11 @@ import { Footer } from './shared/components/footer/footer';
  */
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, NavbarComponent, Footer],
+  imports: [CommonModule, RouterOutlet, NavbarComponent, FooterComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App implements OnInit {
+export class AppComponent implements OnInit {
   private router = inject(Router);
   private auth = inject(AuthService);
 
