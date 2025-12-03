@@ -5,17 +5,17 @@
   <div class="dashboard-cards">
     <div class="card">
       <h3>Tâches à faire</h3>
-      <p class="card-number">3</p>
+      <p class="card-number">{{ todoCount() }}</p>
     </div>
 
     <div class="card">
       <h3>En cours</h3>
-      <p class="card-number">1</p>
+      <p class="card-number">{{ inProgressCount() }}</p>
     </div>
 
     <div class="card">
       <h3>Terminées</h3>
-      <p class="card-number">1</p>
+      <p class="card-number">{{ doneCount() }}</p>
     </div>
   </div>
 </div>

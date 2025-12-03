@@ -1,9 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@auth0/auth0-angular';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**
  * Composant principal de l'application
@@ -15,21 +16,25 @@ import { FooterComponent } from './shared/components/footer/footer.component';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   private router = inject(Router);
   private auth = inject(AuthService);
 
   // Observable pour savoir si l'utilisateur est connecté (utilisé dans le template)
   protected isAuthenticated$ = this.auth.isAuthenticated$;
 
-  ngOnInit(): void {
+  constructor() {
     // Gestion de la navigation après connexion
-    this.auth.isAuthenticated$.subscribe(isAuthenticated => {
+    this.auth.isAuthenticated$.pipe(
+      takeUntilDestroyed()
+    ).subscribe(isAuthenticated => {
       console.log('[App] État authentification:', isAuthenticated);
 
       if (isAuthenticated) {
         // Utilisateur connecté
-        this.auth.user$.subscribe(user => {
+        this.auth.user$.pipe(
+          takeUntilDestroyed()
+        ).subscribe(user => {
           console.log('[App] Utilisateur connecté:', user);
         });
 
@@ -46,12 +51,16 @@ export class AppComponent implements OnInit {
     });
 
     // Debug : vérifier si Auth0 est en train de charger
-    this.auth.isLoading$.subscribe(isLoading => {
+    this.auth.isLoading$.pipe(
+      takeUntilDestroyed()
+    ).subscribe(isLoading => {
       console.log('[App] Auth0 chargement:', isLoading);
     });
 
     // Debug : vérifier les erreurs Auth0
-    this.auth.error$.subscribe(error => {
+    this.auth.error$.pipe(
+      takeUntilDestroyed()
+    ).subscribe(error => {
       if (error) {
         console.error('[App] Erreur Auth0:', error);
       }

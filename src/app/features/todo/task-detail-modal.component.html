@@ -63,8 +63,8 @@
               <option value="medium">Moyenne</option>
               <option value="high">Haute</option>
             </select>
-            <span class="priority-badge" [ngClass]="getPriorityClass(selectedPriority())">
-              {{ getPriorityLabel(selectedPriority()) }}
+            <span class="priority-badge" [ngClass]="taskUtils.getPriorityClass(selectedPriority())">
+              {{ taskUtils.getPriorityLabel(selectedPriority()) }}
             </span>
           </div>
         </div>

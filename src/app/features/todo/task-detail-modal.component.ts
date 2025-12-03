@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Task } from './models/task.model';
 import { TodoService } from './services/todo.service';
+import { TaskUtilsService } from './services/task-utils.service';
 
 @Component({
   selector: 'app-task-detail-modal',
@@ -12,8 +13,9 @@ import { TodoService } from './services/todo.service';
 })
 export class TaskDetailModalComponent {
 
-  // Injection du service pour modifier le statut
+  // Injection des services
   private todoService = inject(TodoService);
+  protected taskUtils = inject(TaskUtilsService);
 
   // @Input : Reçoit la tâche à afficher depuis le composant parent
   task = input.required<Task>();
@@ -70,30 +72,6 @@ export class TaskDetailModalComponent {
 
     // Fermer le modal
     this.closeModal.emit();
-  }
-
-  protected getStatusLabel(status: 'todo' | 'in-progress' | 'done'): string {
-    if (status === 'done') return 'Terminé';
-    if (status === 'in-progress') return 'En cours';
-    return 'À faire';
-  }
-
-  protected getStatusClass(status: 'todo' | 'in-progress' | 'done'): string {
-    if (status === 'done') return 'status-done';
-    if (status === 'in-progress') return 'status-in-progress';
-    return 'status-todo';
-  }
-
-  protected getPriorityLabel(priority: 'low' | 'medium' | 'high'): string {
-    if (priority === 'high') return 'Haute';
-    if (priority === 'medium') return 'Moyenne';
-    return 'Basse';
-  }
-
-  protected getPriorityClass(priority: 'low' | 'medium' | 'high'): string {
-    if (priority === 'high') return 'priority-high';
-    if (priority === 'medium') return 'priority-medium';
-    return 'priority-low';
   }
 
   protected formatDate(date: Date): string {
