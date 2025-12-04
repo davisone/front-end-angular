@@ -1,0 +1,111 @@
+<div class="contact-container">
+  <div class="contact-header">
+    <h1>Contactez-nous</h1>
+    <p class="contact-subtitle">Nous sommes là pour vous aider. Envoyez-nous un message!</p>
+  </div>
+
+  <div class="contact-content">
+    <div class="contact-form-wrapper">
+      @if (successMessage) {
+        <div class="success-message">
+          {{ successMessage }}
+        </div>
+      }
+
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
+        <div class="form-group">
+          <label for="name">Nom complet *</label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            class="form-control"
+            [class.is-invalid]="submitted && f['name'].errors"
+            placeholder="Votre nom"
+          >
+          @if (submitted && f['name'].errors) {
+            <div class="error-message">
+              @if (f['name'].errors['required']) {
+                <span>Le nom est requis</span>
+              }
+              @if (f['name'].errors['minlength']) {
+                <span>Le nom doit contenir au moins 2 caractères</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="form-control"
+            [class.is-invalid]="submitted && f['email'].errors"
+            placeholder="votre.email@exemple.com"
+          >
+          @if (submitted && f['email'].errors) {
+            <div class="error-message">
+              @if (f['email'].errors['required']) {
+                <span>L'email est requis</span>
+              }
+              @if (f['email'].errors['email']) {
+                <span>L'email n'est pas valide</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Objet *</label>
+          <select
+            id="subject"
+            formControlName="subject"
+            class="form-control"
+            [class.is-invalid]="submitted && f['subject'].errors"
+          >
+            @for (option of subjectOptions; track option.value) {
+              <option [value]="option.value" [disabled]="option.value === ''">
+                {{ option.label }}
+              </option>
+            }
+          </select>
+          @if (submitted && f['subject'].errors) {
+            <div class="error-message">
+              @if (f['subject'].errors['required']) {
+                <span>Veuillez sélectionner un sujet</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message *</label>
+          <textarea
+            id="message"
+            formControlName="message"
+            class="form-control"
+            [class.is-invalid]="submitted && f['message'].errors"
+            rows="6"
+            placeholder="Votre message..."
+          ></textarea>
+          @if (submitted && f['message'].errors) {
+            <div class="error-message">
+              @if (f['message'].errors['required']) {
+                <span>Le message est requis</span>
+              }
+              @if (f['message'].errors['minlength']) {
+                <span>Le message doit contenir au moins 10 caractères</span>
+              }
+            </div>
+          }
+        </div>
+
+        <button type="submit" class="btn-submit">
+          Envoyer le message
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
