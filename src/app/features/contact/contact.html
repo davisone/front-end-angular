@@ -1,7 +1,6 @@
 <div class="contact-container">
   <div class="contact-header">
     <h1>Contactez-nous</h1>
-    <p class="contact-subtitle">Nous sommes là pour vous aider. Envoyez-nous un message!</p>
   </div>
 
   <div class="contact-content">
@@ -21,7 +20,7 @@
             formControlName="name"
             class="form-control"
             [class.is-invalid]="submitted && f['name'].errors"
-            placeholder="Votre nom"
+            placeholder="Votre nom prénom"
           >
           @if (submitted && f['name'].errors) {
             <div class="error-message">
@@ -30,6 +29,9 @@
               }
               @if (f['name'].errors['minlength']) {
                 <span>Le nom doit contenir au moins 2 caractères</span>
+              }
+              @if (f['name'].errors['bannedWord']) {
+                <span>Le mot "{{ f['name'].errors['bannedWord'].word }}" est interdit</span>
               }
             </div>
           }
@@ -97,6 +99,9 @@
               }
               @if (f['message'].errors['minlength']) {
                 <span>Le message doit contenir au moins 10 caractères</span>
+              }
+              @if (f['message'].errors['bannedWord']) {
+                <span>Le mot "{{ f['message'].errors['bannedWord'].word }}" est interdit</span>
               }
             </div>
           }

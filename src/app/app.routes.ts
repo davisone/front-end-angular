@@ -8,9 +8,6 @@ import { authGuard } from './core/guards/auth.guard';
 
 /**
  * Configuration des routes de l'application
- * - Page de bienvenue : accessible sans connexion
- * - Page de contact : accessible sans connexion
- * - Autres routes : nécessitent une authentification (canActivate: [authGuard])
  */
 export const routes: Routes = [
   // Route de bienvenue - accessible sans connexion
@@ -26,16 +23,16 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [authGuard]  // Vérifie que l'utilisateur est connecté
+    canActivate: [authGuard]
   },
   {
     path: 'tasks',
     component: TodoListComponent,
-    canActivate: [authGuard]  // Vérifie que l'utilisateur est connecté
+    canActivate: [authGuard]
   },
   {
     path: 'tasks/create',
     component: TodoFormComponent,
-    canActivate: [authGuard]  // Vérifie que l'utilisateur est connecté
+    canActivate: [authGuard]
   },
 ];
